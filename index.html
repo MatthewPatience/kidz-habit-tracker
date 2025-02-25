@@ -22,15 +22,15 @@
         <div class="task-container">
             <h2>Daily Tasks</h2>
             <ul class="task-list">
-                <li class="task-item" data-growth="stem">Brush Teeth</li>
-                <li class="task-item" data-growth="leaf">Wash Hands</li>
-                <li class="task-item" data-growth="dot">Take a Shower</li>
-                <li class="task-item" data-growth="petal-1">Clean Room Before Bed</li>
-                <li class="task-item" data-growth="petal-2">Put Lunch Bag on Counter</li>
-                <li class="task-item" data-growth="petal-3">Hang Up Coat</li>
-                <li class="task-item" data-growth="petal-4">Hug Mom & Dad</li>
-                <li class="task-item" data-growth="petal-5">Put on PJs</li>
-                <li class="task-item" data-growth="petal-6">Get Dressed for School</li>
+                <li class="task-item">Brush Teeth</li>
+                <li class="task-item">Wash Hands</li>
+                <li class="task-item">Take a Shower</li>
+                <li class="task-item">Clean Room Before Bed</li>
+                <li class="task-item">Put Lunch Bag on Counter</li>
+                <li class="task-item">Hang Up Coat</li>
+                <li class="task-item">Hug Mom & Dad</li>
+                <li class="task-item">Put on PJs</li>
+                <li class="task-item">Get Dressed for School</li>
             </ul>
         </div>
         <div class="plant-container">
@@ -73,31 +73,31 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const taskItems = document.querySelectorAll('.task-item');
+            const growthSequence = ['stem', 'leaf', 'dot', 'petal-1', 'petal-2', 'petal-3', 'petal-4', 'petal-5', 'petal-6'];
+            let completedTasks = 0;
+
             taskItems.forEach(task => {
                 task.addEventListener('click', () => {
                     if (!task.classList.contains('completed')) {
                         task.classList.add('completed');
+                        completedTasks++;
 
-                        const growthElements = task.dataset.growth.split(',');
                         const waterJar = document.querySelector('.water-jar');
                         const water = document.querySelector('.water');
 
-                        // Always show watering animation first
                         waterJar.classList.add('animate');
                         water.classList.add('animate');
 
-                        // Wait for watering animation to complete
                         setTimeout(() => {
                             waterJar.classList.remove('animate');
                             water.classList.remove('animate');
 
-                            // Start growth animation after watering
-                            growthElements.forEach(element => {
-                                const plantPart = document.querySelector(`.${element}`);
+                            if (completedTasks <= growthSequence.length) {
+                                const plantPart = document.querySelector(`.${growthSequence[completedTasks - 1]}`);
                                 if (plantPart) {
                                     plantPart.classList.add('animate');
                                 }
-                            });
+                            }
                         }, 2000);
                     }
                 });
