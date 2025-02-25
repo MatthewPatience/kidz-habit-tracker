@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growing Habits</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- <div class="time-control">
+            <label for="timeSlider">Test Time: <span id="timeDisplay">12:00</span></label>
+            <input type="range" id="timeSlider" min="0" max="24" step="0.25" value="12">
+        </div> -->
+        <div class="task-container">
+            <h2>Daily Tasks</h2>
+            <ul class="task-list">
+                <li class="task-item" data-growth="stem">Brush Teeth</li>
+                <li class="task-item" data-growth="leaf">Wash Hands</li>
+                <li class="task-item" data-growth="dot">Take a Shower</li>
+                <li class="task-item" data-growth="petal-1">Clean Room Before Bed</li>
+                <li class="task-item" data-growth="petal-2">Put Lunch Bag on Counter</li>
+                <li class="task-item" data-growth="petal-3">Hang Up Coat</li>
+                <li class="task-item" data-growth="petal-4">Hug Mom & Dad</li>
+                <li class="task-item" data-growth="petal-5">Put on PJs</li>
+                <li class="task-item" data-growth="petal-6">Get Dressed for School</li>
+            </ul>
+        </div>
+        <div class="plant-container">
+            <div class="sun">
+                <div class="sunrays"></div>
+                <div class="circle"></div>
+            </div>
+            <div class="moon">
+                <div class="circle"></div>
+            </div>
+            <div class="flower">
+                <div class="stem"></div>
+                <div class="leaf"></div>
+                <div class="petal petal-1"></div>
+                <div class="petal petal-2"></div>
+                <div class="petal petal-3"></div>
+                <div class="petal petal-4"></div>
+                <div class="petal petal-5"></div>
+                <div class="petal petal-6"></div>
+                <div class="dot"></div>
+            </div>
+            <div class="shadow"></div>
+            <div class="pot"></div>
+            <div class="water-jar"></div>
+            <div class="water"></div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const taskItems = document.querySelectorAll('.task-item');
+            taskItems.forEach(task => {
+                task.addEventListener('click', () => {
+                    if (!task.classList.contains('completed')) {
+                        task.classList.add('completed');
+
+                        const growthElements = task.dataset.growth.split(',');
+                        const waterJar = document.querySelector('.water-jar');
+                        const water = document.querySelector('.water');
+
+                        // Always show watering animation first
+                        waterJar.classList.add('animate');
+                        water.classList.add('animate');
+
+                        // Wait for watering animation to complete
+                        setTimeout(() => {
+                            waterJar.classList.remove('animate');
+                            water.classList.remove('animate');
+
+                            // Start growth animation after watering
+                            growthElements.forEach(element => {
+                                const plantPart = document.querySelector(`.${element}`);
+                                if (plantPart) {
+                                    plantPart.classList.add('animate');
+                                }
+                            });
+                        }, 2000);
+                    }
+                });
+            });
+        });
+
+        let useCustomTime = false;
+        // const timeSlider = document.getElementById('timeSlider');
+        // const timeDisplay = document.getElementById('timeDisplay');
+
+        // timeSlider.addEventListener('input', (e) => {
+        //     useCustomTime = true;
+        //     const hours = Math.floor(e.target.value);
+        //     const minutes = (e.target.value % 1) * 60;
+        //     timeDisplay.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+        //     updateDayNightCycle();
+        // });
+
+        function updateDayNightCycle() {
+            const now = useCustomTime
+                ? new Date(new Date().setHours(timeSlider.value, (timeSlider.value % 1) * 60))
+                : new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const time = hours + minutes / 60;
+
+            const body = document.body;
+            const sun = document.querySelector('.sun');
+            const moon = document.querySelector('.moon');
+
+            // Calculate sun/moon position (top: 400px to -50px)
+            let celestialY;
+
+            if (time >= 6 && time <= 18) {
+                // Daytime: Sun movement
+                const dayProgress = (time - 6) / 12; // 0 to 1 over 12 hours
+                celestialY = 400 - 450 * Math.sin(dayProgress * Math.PI);
+
+                sun.style.display = 'block';
+                sun.style.top = `${celestialY}px`;
+                moon.style.display = 'none';
+
+                // Update sky color
+                if (time < 10) {
+                    body.className = 'sky-morning';
+                } else if (time < 16) {
+                    body.className = 'sky-noon';
+                } else {
+                    body.className = 'sky-evening';
+                }
+            } else {
+                // Nighttime: Moon movement
+                const nightTime = time < 6 ? time + 24 : time;
+                const nightProgress = (nightTime - 18) / 12;
+                celestialY = 400 - 450 * Math.sin(nightProgress * Math.PI);
+
+                moon.style.display = 'block';
+                moon.style.top = `${celestialY}px`;
+                sun.style.display = 'none';
+                body.className = 'sky-night';
+            }
+        }
+        setInterval(updateDayNightCycle, 60000);
+        updateDayNightCycle();
+    </script>
+</body>
+
+</html>
