@@ -1,7 +1,8 @@
 {
     "name": "Growing Habits",
     "short_name": "Habits",
-    "start_url": "/kidz-habit-tracker",
+    "start_url": "https://matthewpatience.github.io/kidz-habit-tracker/",
+    "scope": "https://matthewpatience.github.io/kidz-habit-tracker/",
     "display": "fullscreen",
     "background_color": "#ffffff",
     "theme_color": "#ffffff",
